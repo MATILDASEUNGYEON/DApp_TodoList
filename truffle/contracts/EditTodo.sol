@@ -17,12 +17,10 @@ contract EditTodo{
         Status status;
     }
 
-   
     mapping(address => mapping(uint256 => Todo)) public todos;
     mapping(address => uint256) public TodoId;
     mapping(address => uint256[]) public getId;
 
-    
     event TodoCreated(address indexed user, uint256 indexed todoId, string title, string description, uint256 startDate, uint256 endDate, Status status);
     event TodoDeleted(address indexed user,uint256 indexed  todoId);
     event TodoUpdated(address indexed user, uint256 indexed todoId, string title, string description, uint256 startDate,uint256 endDate, Status status);
@@ -32,7 +30,6 @@ contract EditTodo{
         return uint256(hash);
     }
 
-   
     function createTodo(string memory title, string memory description, uint256 startDate, uint256 endDate, Status status) external returns(uint256,string memory,string memory,uint256,uint256,Status){
    
         uint256 newTodoId = generateTodoId(msg.sender, title, description, startDate, endDate, status);
@@ -46,22 +43,11 @@ contract EditTodo{
         });
 
         TodoId[msg.sender]++;
-
-        emit TodoCreated(msg.sender, newTodoId, title, description, startDate, endDate, status);
         getId[msg.sender].push(newTodoId);
+        emit TodoCreated(msg.sender, newTodoId, title, description, startDate, endDate, status);
         return(newTodoId,title,description,startDate,endDate,status);
     }
     
-    function deleteTodo(uint256 todoId) external {
-        // require(todoId == TodoId[msg.sender], "Todo does not exist");
-
-        delete todos[msg.sender][todoId];
-        TodoId[msg.sender]--;
-
-        emit TodoDeleted(msg.sender, todoId);
-    }
-    
-
     function getTodo(address user) external view returns (Todo[] memory,uint256[] memory) {
         uint256[] storage tokenIDs = getId[user];
         Todo[] memory userTodos = new Todo[](tokenIDs.length);
@@ -72,6 +58,14 @@ contract EditTodo{
         }
 
         return (userTodos,tokenIDs);
+    }
+        
+    function deleteTodo(uint256 todoId) external {
+            
+        delete todos[msg.sender][todoId];
+        TodoId[msg.sender]--;
+
+        emit TodoDeleted(msg.sender, todoId);
     }
 
     function updateTodo(uint256 tokenId,string memory title, string memory description, uint startDate, uint endDate, Status status) external {
