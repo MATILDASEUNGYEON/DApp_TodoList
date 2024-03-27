@@ -22,7 +22,6 @@ function ToggleButtonTodo({ value, onChange }) {
 
   return (
     <ButtonGroup>
-      {""}
       {radios.map((radio, idx) => (
         <ToggleButton
           key={idx}

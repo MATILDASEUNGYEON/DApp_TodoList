@@ -20,6 +20,7 @@ function Todo(props) {
   // const [tasks, setTasks] = useState(props.tasks);
   const [sender, setSender] = useState(null); // 발신자 주소 상태 추가
   const [buttonName, setButtonName] = useState("편집");
+  const [deletebutton, setDeleteButton] = useState("삭제");
   const getList = props.getList;
 
   const web3 = new Web3(window.ethereum);
@@ -122,17 +123,24 @@ function Todo(props) {
       alert("취소되었습니다.");
       return;
     }
+    if (deletebutton === "삭제 중...") {
+      alert("진행 중입니다.");
+      return;
+    }
+    setDeleteButton("삭제 중...");
     try {
       await contract.methods
         .deleteTodo(props.id)
         .send({ from: sender })
         .then(() => {
           alert("할일이 삭제되었습니다.");
+          setDeleteButton("삭제");
           getList();
           console.log("getList 호출");
         })
         .catch((err) => {
           alert("삭제가 취소되었습니다.");
+          setDeleteButton("삭제");
           return;
         });
     } catch (error) {
@@ -200,14 +208,17 @@ function Todo(props) {
       </FormGroup>
       <FormGroup>
         <Form.Label className="todo-label" htmlFor={`${props.id}-status`}>
-          상태: 너 어딨니?
+          상태:
         </Form.Label>
-        <InputGroup>
-          <ToggleButtonTodo
-            value={parseInt(newStatus)}
-            onChange={handleStatusChange}
-          />
-        </InputGroup>
+        <div className="StatusButton">
+          <InputGroup>
+            <ToggleButtonTodo
+              className="StatusButton"
+              value={parseInt(newStatus)}
+              onChange={handleStatusChange}
+            />
+          </InputGroup>
+        </div>
       </FormGroup>
       <div className="btn-group">
         <Button variant="outline-danger" onClick={() => setEditing(false)}>
@@ -236,7 +247,8 @@ function Todo(props) {
           variant="outline-danger"
           onClick={() => deleteHandleSubmit(props.id)}
         >
-          삭제
+          {/* 삭제 */}
+          {deletebutton}
         </Button>
       </div>
     </div>

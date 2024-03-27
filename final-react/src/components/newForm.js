@@ -174,12 +174,15 @@ function TaskForm({ getList }) {
       </Form.Group> */}
 
       <Form.Group controlId="formStatus">
-        <Form.Label>상태: 입력버튼Test</Form.Label>
-        <ToggleButtonExample
-          value={task.status}
-          name="status"
-          onChange={statusChange}
-        />
+        <Form.Label>상태:</Form.Label>
+        <div className="StatusButton">
+          <ToggleButtonExample
+            className="StatusButton"
+            value={task.status}
+            name="status"
+            onChange={statusChange}
+          />
+        </div>
       </Form.Group>
 
       <Button
