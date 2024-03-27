@@ -3,12 +3,14 @@ pragma solidity ^0.8.0;
 
 contract EditTodo{
 
+    //enum[나열형]
     enum Status{
         todo,
         doing,
         done
     }
 
+    //구조체
     struct Todo{
         string title;
         string description;
@@ -17,19 +19,23 @@ contract EditTodo{
         Status status;
     }
 
+    //매핑(Mapping)
+    //기본 형태 [mapping(Key => Value) 접근제한자 변수이름]
     mapping(address => mapping(uint256 => Todo)) public todos;
-    mapping(address => uint256) public TodoId;
-    mapping(address => uint256[]) public getId;
+    mapping(address => uint256) public TodoId; //TodoCnt
+    mapping(address => uint256[]) public getId; //TokenId의 배열
 
+    //Event
     event TodoCreated(address indexed user, uint256 indexed todoId, string title, string description, uint256 startDate, uint256 endDate, Status status);
     event TodoDeleted(address indexed user,uint256 indexed  todoId);
     event TodoUpdated(address indexed user, uint256 indexed todoId, string title, string description, uint256 startDate,uint256 endDate, Status status);
     
+    //Function
     function generateTodoId(address user, string memory title, string memory description, uint256 startDate, uint256 endDate, Status status) internal view returns (uint256) {
         bytes32 hash = keccak256(abi.encodePacked(user, title, description, startDate, endDate, status, block.timestamp));
         return uint256(hash);
     }
-
+    
     function createTodo(string memory title, string memory description, uint256 startDate, uint256 endDate, Status status) external returns(uint256,string memory,string memory,uint256,uint256,Status){
    
         uint256 newTodoId = generateTodoId(msg.sender, title, description, startDate, endDate, status);
@@ -56,12 +62,10 @@ contract EditTodo{
             uint256 tokenID = tokenIDs[i];
             userTodos[i] = todos[msg.sender][tokenID];
         }
-
         return (userTodos,tokenIDs);
     }
         
     function deleteTodo(uint256 todoId) external {
-            
         delete todos[msg.sender][todoId];
         TodoId[msg.sender]--;
 
