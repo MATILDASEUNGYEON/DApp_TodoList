@@ -22,7 +22,7 @@ contract EditTodo{
     //매핑(Mapping)
     //기본 형태 [mapping(Key => Value) 접근제한자 변수이름]
     mapping(address => mapping(uint256 => Todo)) public todos;
-    mapping(address => uint256) public TodoId; //TodoCnt
+    mapping(address => uint256) public TodoId; //TodoCnt[할일 수]
     mapping(address => uint256[]) public getId; //TokenId의 배열
 
     //Event
